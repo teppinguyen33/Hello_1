@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import org.apache.commons.httpclient.HttpException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.common.MusicMP3Enum;
@@ -19,8 +19,8 @@ import com.music.object.SongSearchParam;
 @Controller
 public class PlayController {
 
-	@RequestMapping(value = "/music/songByCode", method = RequestMethod.GET)
-	public ModelAndView songByCode(@RequestParam String songId) {
+	@RequestMapping(value = "/music/songByCode/{songId}", method = RequestMethod.GET)
+	public ModelAndView songByCode(@PathVariable("songId") String songId) {
 
 		Song song = new Song();
 		String url = MusicMP3Enum.HOST.getText() + MusicMP3Enum.SONG.getText()

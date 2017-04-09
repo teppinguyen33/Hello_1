@@ -12,8 +12,7 @@ public class IndexController {
 
 	@RequestMapping(value = "/music", method = RequestMethod.GET)
 	public ModelAndView index() {
-		return new ModelAndView("music/musicIndex", "songSearchParam",
-				new SongSearchParam());
+		return new ModelAndView("music/musicIndex", "songSearchParam", new SongSearchParam());
 	}
 	
 }

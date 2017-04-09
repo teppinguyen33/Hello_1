@@ -22,18 +22,29 @@ import com.music.object.SongSearchParam;
 @Controller
 public class SearchController {
 	
+	private static final String KEYWORD_START = "<h2 class=\"title-main-item\"><span>";
+	private static final String KEYWORD_END = "</span></h2>";
+	private static final String RESULT_START = "<h3 class=\"title-sub\">";
+	private static final String RESULT_END = "</h3>";
+	private static final String ID = ".html";
+	private static final String NAME_START = "<h2 class=\"title-song ellipsis-2\">";
+	private static final String NAME_END = "</h2>";
+	private static final String ARTIST_START = "<h3 class=\"title-sub\">";
+	private static final String ARTIST_END = "</h3>";
+	private static final String LISTEN_START = "<span class=\"nu\">";
+	private static final String LISTEN_END = "</span>";
+	
 	@RequestMapping(value = "/music/search", method = RequestMethod.GET)
 	public ModelAndView searchSongName(
 			@ModelAttribute SongSearchParam songSearchParam) {
 
 		List<Song> listSong = null;
-		System.out.println(songSearchParam.getSongName());
-
+		String keyword = null;
+		String numberOfResult = null;
+		
 		try {
 			String param = "?q="
-					+ URLEncoder.encode(songSearchParam.getSongName(), "UTF-8");
-
-			System.out.println(param);
+					+ URLEncoder.encode(songSearchParam.getQ(), "UTF-8");
 
 			String url = MusicMP3Enum.HOST.getText()
 					+ MusicMP3Enum.SEARCH.getText() + param;
@@ -42,8 +53,6 @@ public class SearchController {
 			byte[] responseBody = callAPI.getResponseBody();
 
 			String responseString = Utilities.decompress(responseBody);
-
-			System.out.println(responseString);
 
 			String[] rawSong = responseString.split("<a href=\"/bai-hat/");
 			int numberOfSong = rawSong.length;
@@ -56,10 +65,22 @@ public class SearchController {
 			String numberOfListen = null;
 			int start = -1;
 			int end = -1;
-			for (int i = 1; i < numberOfSong; i++) {
-
+			for (int i = 0; i < numberOfSong; i++) {
+				
+				// Lấy số kết quả trả về và keyword search
+				if (i == 0) {
+					start = rawSong[i].indexOf(KEYWORD_START) + KEYWORD_START.length();
+					end = rawSong[i].indexOf(KEYWORD_END);
+					keyword = rawSong[i].substring(start, end);
+					
+					start = rawSong[i].indexOf(RESULT_START) + RESULT_START.length();
+					end = rawSong[i].indexOf(RESULT_END);
+					numberOfResult = rawSong[i].substring(start, end);
+					continue;
+				}
+				
 				// Lấy id của bài hát
-				start = rawSong[i].indexOf(".html") - 8;
+				start = rawSong[i].indexOf(ID) - 8;
 				end = start + 8;
 				if (start == -1) {
 					break;
@@ -69,18 +90,18 @@ public class SearchController {
 
 				// Lấy tên bài hát
 				start = rawSong[i]
-						.indexOf("<h2 class=\"title-song ellipsis-2\">") + 34;
-				end = rawSong[i].indexOf("</h2>");
+						.indexOf(NAME_START) + NAME_START.length();
+				end = rawSong[i].indexOf(NAME_END);
 				name = rawSong[i].substring(start, end);
 
 				// Lấy tên nghệ sĩ
-				start = rawSong[i].indexOf("<h3 class=\"title-sub\">") + 22;
-				end = rawSong[i].indexOf("</h3>");
+				start = rawSong[i].indexOf(ARTIST_START) + ARTIST_START.length();
+				end = rawSong[i].indexOf(ARTIST_END);
 				artist = rawSong[i].substring(start, end);
 
 				// Lấy số lượt nghe
-				start = rawSong[i].indexOf("<span class=\"nu\">") + 17;
-				end = rawSong[i].indexOf("</span>");
+				start = rawSong[i].indexOf(LISTEN_START) + LISTEN_START.length();
+				end = rawSong[i].indexOf(LISTEN_END);
 				numberOfListen = rawSong[i].substring(start, end);
 
 				Song song = new Song();
@@ -101,6 +122,8 @@ public class SearchController {
 		ModelAndView modelAndView = new ModelAndView("music/musicResult");
 		modelAndView.addObject("listSong", listSong);
 		modelAndView.addObject("songSearchParam", new SongSearchParam());
+		modelAndView.addObject("keyword", keyword);
+		modelAndView.addObject("numberOfResult", numberOfResult);
 
 		return modelAndView;
 	}

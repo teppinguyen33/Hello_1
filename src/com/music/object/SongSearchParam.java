@@ -2,14 +2,14 @@ package com.music.object;
 
 public class SongSearchParam {
 
-	private String songName;
+	private String q;
 
-	public String getSongName() {
-		return songName;
+	public String getQ() {
+		return q;
 	}
 
-	public void setSongName(String songName) {
-		this.songName = songName;
+	public void setQ(String q) {
+		this.q = q;
 	}
 
 }
