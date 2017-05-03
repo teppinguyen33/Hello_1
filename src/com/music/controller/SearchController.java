@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.httpclient.HttpException;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,14 +15,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.common.MusicMP3Enum;
-import com.music.common.CallAPI;
+import com.music.common.CallAPIGetMethod;
 import com.music.common.Utilities;
-import com.music.object.Song;
-import com.music.object.SongSearchParam;
+import com.music.entity.Song;
+import com.music.entity.SongSearchParam;
 
 @Controller
 public class SearchController {
 	
+	private static final Logger logger = Logger.getLogger(SearchController.class.getName());
+	private static final String SONG_SPLIT = "<a href=\"/bai-hat/";
 	private static final String KEYWORD_START = "<h2 class=\"title-main-item\"><span>";
 	private static final String KEYWORD_END = "</span></h2>";
 	private static final String RESULT_START = "<h3 class=\"title-sub\">";
@@ -36,8 +39,9 @@ public class SearchController {
 	
 	@RequestMapping(value = "/music/search", method = RequestMethod.GET)
 	public ModelAndView searchSongName(
-			@ModelAttribute SongSearchParam songSearchParam) {
+			@ModelAttribute("songSearchParam") SongSearchParam songSearchParam) {
 
+		logger.info("START: search bai hat");
 		List<Song> listSong = null;
 		String keyword = null;
 		String numberOfResult = null;
@@ -49,13 +53,14 @@ public class SearchController {
 			String url = MusicMP3Enum.HOST.getText()
 					+ MusicMP3Enum.SEARCH.getText() + param;
 
-			CallAPI callAPI = new CallAPI(url);
+			CallAPIGetMethod callAPI = new CallAPIGetMethod(url);
 			byte[] responseBody = callAPI.getResponseBody();
 
 			String responseString = Utilities.decompress(responseBody);
 
-			String[] rawSong = responseString.split("<a href=\"/bai-hat/");
+			String[] rawSong = responseString.split(SONG_SPLIT);
 			int numberOfSong = rawSong.length;
+			logger.info("So bai hat: " + numberOfSong);
 			if (numberOfSong > 1) {
 				listSong = new ArrayList<Song>();
 			}

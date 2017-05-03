@@ -17,10 +17,14 @@
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
-			<value>/WEB-INF/realdocs/</value>
+			<value>/realdocs/</value>
 		</property>
 		<property name="suffix">
 			<value>.jsp</value>
 		</property>
 	</bean>
+
+	<mvc:resources location="/webjars/" mapping="/webjars/**"></mvc:resources>
+	<mvc:resources location="/contents/" mapping="/contents/**"></mvc:resources>
+
 </beans>

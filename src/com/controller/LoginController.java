@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dao.LoginDAO;
-import com.object.User;
+import com.entity.User;
 
 @Controller
 public class LoginController {

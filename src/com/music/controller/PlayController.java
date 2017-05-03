@@ -11,10 +11,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.common.MusicMP3Enum;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.music.common.CallAPI;
-import com.music.object.Song;
-import com.music.object.SongData;
-import com.music.object.SongSearchParam;
+import com.music.common.CallAPIGetMethod;
+import com.music.entity.Song;
+import com.music.entity.SongData;
+import com.music.entity.SongSearchParam;
 
 @Controller
 public class PlayController {
@@ -27,7 +27,7 @@ public class PlayController {
 				+ songId;
 
 		try {
-			CallAPI callAPI = new CallAPI(url);
+			CallAPIGetMethod callAPI = new CallAPIGetMethod(url);
 			byte[] responseBody = callAPI.getResponseBody();
 
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -42,8 +42,6 @@ public class PlayController {
 			song.setTitle(songData.getData().getTitle());
 			songData.getData().getQualities().sync();
 			song.setQualities(songData.getData().getQualities());
-
-			System.out.println(song.getTitle());
 
 		} catch (HttpException he) {
 			he.printStackTrace();
