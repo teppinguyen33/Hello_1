@@ -7,10 +7,10 @@
 	<bean id="database" class="com.common.Database" scope="singleton"
 		lazy-init="true">
         <property name="driver" value="com.mysql.jdbc.Driver"></property>
-        <property name="host" value="jdbc:mysql://localhost:3306/"></property>
-        <property name="database" value="teppi"></property>
-        <property name="username" value="root"></property>
-        <property name="password" value=""></property>
+        <property name="host" value="jdbc:mysql://sql9.freemysqlhosting.net:3306/"></property>
+        <property name="database" value="sql9172520"></property>
+        <property name="username" value="sql9172520"></property>
+        <property name="password" value="rxeXTJqY5F"></property>
 	</bean>
 
 </beans>
