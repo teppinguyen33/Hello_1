@@ -1,1 +1,1 @@
-web: play run --http.port=$PORT $PLAY_OPTS
+web: java -cp target/classes:target/dependency/*
